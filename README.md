@@ -22,4 +22,8 @@ Lecture 10 - [Time Series](https://github.com/harvard-ml-courses/cs281-scribe/bl
 
 Lecture 11 - [Belief Propagation](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/11/11.pdf)
 
-Lecture 11 - [Belief Propagation](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/13/13.pdf)
+Lecture 12 - [Recurrent Neural Networks](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/12/12.pdf)
+
+Lecture 13 - [Information Theory](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/13/13.pdf)
+
+Lecture 15 - [Mean Field](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/15/15.pdf)
