@@ -38,7 +38,7 @@ For example, suppose we want to think about models from Naive Bayes:
   \node[latent, above=of y] (pi) {$\pi$};
   \node[latent, below=of y, xshift=-1cm]  (x1) {$x_{1,n}$};
   \node[latent, below=of y, xshift=1cm]  (xv) {$x_{V,n}$};
-  \node[latent, below=of x1, xshift = 1cm] (mu) {$\mu$};
+  \node[latent, below=of x1, xshift = 1cm] (mu) {$\mu_k$};
 
   % Connect the nodes
   \edge {y} {x1};
@@ -49,6 +49,7 @@ For example, suppose we want to think about models from Naive Bayes:
   
   \path (x1) -- node[auto=false]{\ldots} (xv);
     \plate {plate} {(y)(x1)(xv)} {$n$} ;
+    \plate {plate} {(mu)} {$k$}
 \end{tikzpicture}
 \end{center}
 
@@ -67,7 +68,7 @@ In a new setting, instead suppose we have the same graphical plate model, but we
   \node[latent, above=of z] (pi) {$\pi$};
   \node[latent, below=of z, xshift=-1cm]  (x1) {$x_{1,n}$};
   \node[latent, below=of z, xshift=1cm]  (xv) {$x_{V,n}$};
-  \node[latent, below=of x1, xshift = 1cm] (mu) {$\mu$};
+  \node[latent, below=of x1, xshift = 1cm] (mu) {$\mu_k$};
 
   % Connect the nodes
   \edge {z} {x1};
@@ -78,8 +79,36 @@ In a new setting, instead suppose we have the same graphical plate model, but we
   
   \path (x1) -- node[auto=false]{\ldots} (xv);
 	\plate {plate} {(z)(x1)(xv)} {$n$} ;
+	\plate {plate} {(mu)} {$k$}
 
 \end{tikzpicture}
+\end{center}
+which also can be represented with the following undirected graphical model:
+\begin{center}
+	\begin{tikzpicture}[]
+	
+	%Define nodes
+	\node[latent] (z) {$z_n$};
+	\node[latent, above=of z] (pi) {$\pi$};
+	\node[latent, below=of z, xshift=-1cm]  (x1) {$x_{1,n}$};
+	\node[latent, below=of z, xshift=1cm]  (xv) {$x_{V,n}$};
+	\node[latent, below=of x1, xshift = 1cm] (mu) {$\mu_k$};
+	
+	% Connect the nodes
+	\path[draw]
+	(z) edge node {}  (x1)
+	(z) edge node {}  (xv)
+	(z) edge node {}  (mu)
+	(pi) edge node {}  (z)
+	(mu) edge node {}  (x1)
+	(mu) edge node {}  (xv);
+	
+	
+	\path (x1) -- node[auto=false]{\ldots} (xv);
+	\plate {plate} {(z)(x1)(xv)} {$n$} ;
+	\plate {plate} {(mu)} {$k$}
+	
+	\end{tikzpicture}
 \end{center}
 
 What does this graphical model look like, and what dependencies do we need to consider?  
@@ -125,12 +154,13 @@ Although we won't limit ourselves to only using continuous mixture models, we'll
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \section{Math behind Mixture Models}
 
-Now, we delve more deeply into the math behind using such mixture models.  To start, the models involve $x$ (data), $z$ (latent variables), $\pi$ (prior of latent variable), $\{\mu_k\}$ (parameters for conditional distribution).  We will use $x$ and $z$ to denote all $n$ observations of the data and latent variables.
+Now, we delve more deeply into the math behind using such mixture models.  To start, the models involve $x$ (data), $z$ (latent variables), $\pi$ (prior of latent variable), and $\{\mu_k\}$ (parameters for conditional distribution).  We will use $x$ and $z$ to denote all $n$ observations of the data and latent variables.
 
 \smallskip
 
 The {\bf complete data likelihood} of the model is then 
-\[ p(x, z) = \prod_{n} \prod_{k} \pi_k p(x_n | \mu_k)^{z_{nk}}  \]
+\[ p(x, z) = \prod_{n} \prod_{k} \pi_k p(x_n | \mu_k)^{z_{nk}},  \]
+where $z_{nk}$ is shorthand for $\mathbf{1}(Z_n = k)$.
 
 To get the {\bf marginal likelihood} of the data, we can marginalize and sum over all possible values of $z_n$:	
 
@@ -141,7 +171,7 @@ Although we pushed the sum into the product, the sum over all possible values of
 Below is a heuristic algorithm to find $p(x)$:
 \begin{enumerate}
 	\item Initialize $\pi$ and $\mu$ randomly.
-	\item Compute the likelihood $\displaystyle p(x, z | \pi, \mu) = \sum_n \sum_k z_{nk} \log \pi_k + z_{nk} \log p(x_n |\mu_k)$.
+	\item Compute the log-likelihood $\displaystyle p(x, z | \pi, \mu) = \sum_n \sum_k z_{nk} \log \pi_k + z_{nk} \log p(x_n |\mu_k)$ using fixed $\pi$ and $\mu$.
 	\item Denote $q_{nk} = p(z_n = k | x_n ;... )$ as a ``hallucinated'' distribution over $z_{nk}$; the origin of $q_{nk}$ is unclear, but it satisfies the given requirements.  We can use this distribution of $z \sim q_{nk}$ to compute the expectation of the log-likelihood as:
 
 	\begin{align*}
@@ -168,7 +198,7 @@ This heuristic is summarized below:
 \end{algorithm}
 
 
-The above is called the {\bf EM Algorithm}, where step 4 computes the actual expectation maximization, and step 5 actually maximizes through the MLE.  $\pi$ will be Categorical and $\mu$ will be the means of the Gaussians themselves here.
+The above is called the {\bf Expectation Maximization} (EM) Algorithm, where step 4 computes the actual expectation maximization, and step 5 actually maximizes through the MLE.  $\pi$ will be Categorical and $\mu$ will be the means of the Gaussians themselves here.
 
 \section{Expectation Maximization Algorithm}
 
@@ -226,8 +256,8 @@ First, consider the marginal distribution of the data $\displaystyle p(x) = \pro
 \log p(x) &= \sum_n \log \left[\sum_{z_n} p(x_n, z_n, | \pi, \mu) \right]\\
 &= \sum_n \log \left[ \sum_{z_n} q(z_n = k) \frac{p(x_n, z_n|\pi, \mu)}{q (z_n = k)} \right] \\
 &= \sum_n \log \E_q \left[ \frac{p(x_n, z_n | \pi, \mu)}{q(z_n = k)}   \right] \\
-&\ge \sum_n \sum_k q(z_{nk}) \log \frac{p(x_n, z_n |\pi, \mu)}{q(z_n)} \\
-&= \left[\sum_n \sum_k q(z_{nk}) \log p(x_n, z_n |\pi, \mu) \right]- \sum_n \left[\sum_k q(z_{nk}) \log q(z_n)\right] \\
+&\ge \sum_n \sum_k q(z_{nk}) \log \frac{p(x_n, z_n |\pi, \mu_k)}{q(z_n)} \\
+&= \left[\sum_n \sum_k q(z_{nk}) \log p(x_n, z_n |\pi, \mu_k) \right]- \sum_n \left[\sum_k q(z_{nk}) \log q(z_n)\right] \\
 &= \sum_n \sum_k q_{nk} \log p(x_n, z_n = k | \pi, \mu_k) + \sum_n H\left[ q(z_n)\right]
 \end{align*}
 
@@ -238,7 +268,7 @@ In the second line we only multiplied by $\displaystyle 1 = \frac{q(z_n  = k)}{q
 In now analyzing the M-step, we are computing 
 
 \begin{align*}
-\pi, \mu \gets \argmin_{\pi, \mu} \sum_n \sum_k q_{nk} \log \pi_k + q_{nk} \log p(x_n |  \mu_k),	
+\pi, \mu \gets \argmax_{\pi, \mu} \sum_n \sum_k q_{nk} \log \pi_k + q_{nk} \log p(x_n |  \mu_k),
 \end{align*}
 
 where $\displaystyle \sum_k q_{nk} \log \pi_k$ is the cross-entropy between parameters and expected counts.
