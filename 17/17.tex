@@ -5,7 +5,7 @@
 
 \begin{document}
 %\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
-\lecture{17}{November 6}{Sasha Rush}{Patrick Varin}{Loopy BP, Gibbs Sampling, and VI with Gradients}%% Add your scribe names!!
+\lecture{17}{November 6}{Sasha Rush}{Patrick Varin, Lillian Pentecost}{Loopy BP, Gibbs Sampling, and VI with Gradients}%% Add your scribe names!!
 
 \subsection{Loopy BP}
 \subsubsection{History} The history of Loopy-BP begain in 1988 with Judea Pearl who tried to analyze the behavior of the BP algorithm (which gives exact marginal inference on tree) on graphs that are not trees, like the Ising model. Remember the message passing algorithms is
@@ -43,5 +43,89 @@ Loopy BP is generally more costly than mean field VI, because it stores node bel
 In practice, because Loopy BP contains more information about the problem than mean field VI it tends to work better.
 
 \subsection{Gibbs Sampling (Preview)}
+
 \subsection{Variational Inference with Gradients}
+
+\subsubsection{Introduction}
+Variational inference with gradients is also referred to as black box variational inference or stochastic variational inference (SVI) and is actively gaining traction in the ML commnity today.  
+For example, UberAI just released a new framework on top of pytorch called \textit{pyro} to support SVI.  
+One reason why this is attractive is because SVI integrates well with autograd and deep learning.
+
+
+\subsubsection{Aside on Monte Carlo Sampling}
+
+If we consider some expectation over a distribution $p$ of some function $f(z)$, as given below for discrete $z$, we often find this is intractable to compute.
+
+$$
+\E_{z \sim p}[f(z)] = \sum_{z'} p(z') f(z')
+$$
+
+We can approximate this expectation by sampling some $N$ number of $\tilde{z}$, with each sample represented by $\tilde{z}_n$, which results in the following expression for the expectation:
+
+$$
+\E_{z \sim p}[f(z)] \approx \frac{1}{N} \sum_{n=1}^{N} f(\tilde{z}_n)
+$$
+
+This is much simpler to compute, and it can be shown that the resulting $\tilde{\mu}$ satisfies that $(\tilde{\mu}- \mu) \sim \N(0, \frac{\sigma^2}{N})$, which implies that the variance of the approximation with respect to the true mean decreases with the number of samples $N$.
+
+\subsubsection{Rough Idea}
+
+We will apply gradient optimization to the lower bound on $p(x)$ that we use to derive the variational objective.  
+We use the formulation of the GMM and Mean Field approximation with variational parameters, developed in previous lectures, as an example.  
+This is potentially more attractive than coordinate ascent because for a very large dataset compared to the number of classes (i.e. $n >> k$ in the GMM MF configuration) coordinate ascent requires (1) iterating through all data to perform updates to the variational parameters and (2) storing variational parameters per-example (the number of the parameters grows with the size of the dataset).
+
+
+The two wishes/ideas of this approach will be to (1) update global parameters ($\lambda_k$) on mini-batches to avoid the need to iterate over all samples (all $\lambda_n$) to perform update and (2) avoid storage of a dedicated $\lambda_n$ for each $n$.
+The remainder of the lecture will focus on idea (1) above.
+
+
+\subsubsection{Deriving the Variational Objective}
+
+Letting $\theta = {z_n, \mu_k}$, we would like $p(x)$ for the GMM MF configuration previously developed.  
+We aim to maximize the following lower bound (also from previous lecture) in order to approach $p(x)$, where $q_{\lambda}$ is any $q$ with variational parameters $\lambda$.
+
+$$
+p(x) \geq \E_q [\log{\frac{p(x, \theta)}{q_{\lambda}(\theta)}} ]
+$$
+
+$$
+\max_{q} \E_q [\log{\frac{p(x, \theta)}{q_{\lambda}(\theta)}} ]
+$$
+
+Expressing $p(x, \theta) = p(\theta) p(x|\theta)$ and distributing the log, we find the variational objective, and we can interpret each of the three terms:
+
+$$
+\max_{q} - \E_q [\log{q_{\lambda}(\theta)} ] + \E_q [\log{p(\theta)} ] + \E_q [\log{p(x|\theta)} ]
+$$
+
+In the expression above, we can recognize that the first term is just an entropy term, the second term includes the prior to effectively find a $q$ close to $p(\theta)$ based on cross-entropy, and the third term contains the likelihood to reflect how well $\theta$ predicts the data.  
+Furthermore, we see that the first two terms together form the negative inverse KL divergence of $p$ and $q$, so we further simplify to the expression below:
+
+$$
+L(\lambda) = \max_{q} - KL(q(\theta) || p(\theta)) + \E_q (\log{p(x|\theta)})
+$$
+
+In the expression above, the KL divergence will act to tend $q$ towards the prior $p(\theta)$ and the expectation term will give weight in $q$ to parameters that tend to explain $x$.
+
+\subsubsection{Optimization via SGD}
+
+Next, we aim to apply optimization via SGD, and the $L(\lambda)$ given above becomes a loss function; we will maximize the value of this function by computing the gradient with respect to the parameters we care about ($\lambda$).  
+Here, we will take a mini-batch of $x$ values and compute $\nabla_{\lambda} L(\lambda)$.  
+However, we notice that the expectation term in $L(\lambda)$ over $q$ must be approximated, and the two methods to compute an approximation are (1) reinforcement and (2) reparameterization.
+This lecture only covers method (2), reparameterization, which also appears on HW4.
+
+Reparameterization requires known $q$ of a certain type and removes q from the expectation.  
+Beginning with the form of the expectation, we can reformulate in terms of a change of variable from distribution q to the standard normal (letting $\theta = Az+b$) and then apply the Monte Carlo approximation to simplify the expression and make it computationally tractable:
+
+$$
+\E_{q_{\lambda}} [p(x|\theta)] = \E_{z \sim \N(0,1)} [p(x|f_{\lambda}(z))]
+$$
+
+$$
+\nabla_{\lambda} \E_{z \sim \N(0,1)} [p(x|f_{\lambda}(z))] = \E_{z \sim \N(0,1)} [ \nabla_{\lambda} p(x|f_{\lambda}(z))]
+$$
+
+$$
+\nabla_{\lambda} \E_{q_{\lambda}} [p(x|\theta)] \approx \frac{1}{N} \sum_{n=1}^{N} \nabla_{\lambda} p(x|f_{\lambda}(\tilde{z}_n))
+$$
 \end{document}
