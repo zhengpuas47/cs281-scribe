@@ -28,4 +28,4 @@ Lecture 13 - [Information Theory](https://github.com/harvard-ml-courses/cs281-sc
 
 Lecture 14 - [Mixture Models](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/14/14.pdf)
 
-Lecture 
+Lecture 15 - [Mean Field](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/15/15.pdf)
