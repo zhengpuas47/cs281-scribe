@@ -5,7 +5,7 @@
 
 \begin{document}
 %\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
-\lecture{17}{November 6}{Sasha Rush}{Patrick Varin, Lillian Pentecost}{Loopy BP, Gibbs Sampling, and VI with Gradients}%% Add your scribe names!!
+\lecture{17}{November 6}{Sasha Rush}{Patrick Varin, Lillian Pentecost, André Snoeck}{Loopy BP, Gibbs Sampling, and VI with Gradients}%% Add your scribe names!!
 
 \subsection{Loopy BP}
 \subsubsection{History} The history of Loopy-BP begain in 1988 with Judea Pearl who tried to analyze the behavior of the BP algorithm (which gives exact marginal inference on tree) on graphs that are not trees, like the Ising model. Remember the message passing algorithms is
@@ -43,6 +43,57 @@ Loopy BP is generally more costly than mean field VI, because it stores node bel
 In practice, because Loopy BP contains more information about the problem than mean field VI it tends to work better.
 
 \subsection{Gibbs Sampling (Preview)}
+
+Gibbs Sampling is a different method for approximate inference. It is a special case of Markov Chain Monte Carlo (MCMC), which will be covered in more detail in coming lectures. 
+
+The main idea of Gibbs Sampling is to re-estimate the posteriors for $x_i$ assuming that we have we have explicit point estimates for all the other nodes in the graph ($x_{-i}$):
+
+$$\tilde{x}_i \sim P(x_{i} | \tilde{x}_{-i})$$
+
+Naturally, we only care about the Markov blanket when estimating a particular node. Gibbs sampling is not a parallel algorithm, the samples have to be generated sequentially. However, we can go through our graph in any particular order and update each node accordingly. 
+
+\subsubsection{Example: Gibbs Sampling Topic Modeling}
+
+In the following example, we present the Gibbs update associated to the topic modeling that we defined in Lecture 16. Remember that 
+
+\begin{align*}
+\beta_k \sim Dir(\eta)& &k\text{ topics} \\
+\pi_n \sim Dir(\alpha)& &n\text{ documents} \\
+z_{ni} \sim Cat(\pi_n)& &\text{Draw topic for each word and each document} \\
+w_{ni} \sim Dir(\beta_{z_{ni	}})& &\text{Draw a word from a topic} \\
+\end{align*}
+
+and the full joint distribution is given by 
+
+% Use \pi instead of \theta
+\begin{equation*}
+p(\beta_k, \pi_n, \{z\}, \{w\}) = \prod_{k}{p(\beta_k)}\prod_{n}{p(\pi_n)}\prod_{n,i}{p(z_{ni} | \pi_n){p(w_{ni} | z_{ni})}}
+\end{equation*}
+
+See Figure \ref{fig:topic_modeling} for reference. 
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width = 0.4\textwidth]{topic_model.pdf}
+%\vspace{-0.2cm}
+\caption{Graphical model associated to topic modeling example}
+\label{fig:topic_modeling}
+%\vspace{-0.5cm}
+\end{figure}
+
+% \begin{equation*}
+% p(\beta_k, \theta_n, \{z\}, \{w\}) = \prod_{k}{p(\beta_k)}\prod_{n}{p(\theta_n)}\prod_{n,i}{p(z_{ni} | \theta_n){p(w_{ni} | z_{ni})}}
+% \end{equation*}
+
+The updates for Gibbs sampling are similar to those of Mean Field (see Lecture 16), albeit much simpler. We need to compute the conditional probability for each of the following
+
+\begin{align*}
+z_{ni} = k | \pi_n, w_{ni} &\propto \pi_{nk}\beta_{k,w_{ni}} \\
+\pi_n | \alpha, z_{ni} &= Dir(a_k + \sum_{i}\mathbb{1}(z_{ni} = k)) \\
+\beta_k = d | \eta, z_{ni} &= Dir(\eta_d + \sum_{i}\mathbb{1}(z_{ni} = k, w_{ni} = d))
+\end{align*}
+
+The last two terms are essentially the full posterior that we saw in lecture 2. Although these updates are rather simple, it is used in many applications given it works with a wide variety of models. Typically, one would draw one sample per update. It is not clear whether drawing multiple samples or running more epochs helps the algorithm converge faster. 
 
 \subsection{Variational Inference with Gradients}
 
