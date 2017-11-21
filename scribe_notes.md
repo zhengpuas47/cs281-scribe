@@ -7,3 +7,6 @@ So that we don't have to go back and correct your scribe notes for style, follow
 3. Use `\on` (short for `\operatorname`) for text that refers to symbols, like `\on{Bern}` or `\on{trace}`. 
 4. Don't indent your text for `\subsection`, etc. Indent for `\begin{itemize}` or `\begin{enumerate}` environments.
 5. Always use `\sin` instead of `sin`, and similarly for other functions (log, cos, etc.). We've defined a `\exp`, though it's not standard.
+
+#### Images
+*All* images should be encased in a `\figure` environment. Include a descriptive caption and a label. Refer to them from the text using the label. Center the image.
