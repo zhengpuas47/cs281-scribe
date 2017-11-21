@@ -5,7 +5,7 @@
 
 \begin{document}
 %\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
-\lecture{1}{September 6}{Sasha Rush}{Anna Sophie Hilgard, Diondra Peck}{Discrete Models}
+\lecture{2}{September 6}{Sasha Rush}{Anna Sophie Hilgard, Diondra Peck}{Discrete Models}
 
 \begin{itemize}
 \item Discrete models take values from a countable set, e.g. \{0,1\}, \{cold, flu, asthma\} and are simpler than continuous models.
@@ -28,7 +28,7 @@ $$p(\theta) = 0.1 \cdot \delta(\theta = 0.4)  + 0.8 \cdot \delta(\theta = 0.5) +
 
 \subsubsection*{Likelihood}
 Likelihood = $p(\text{data}|\text{parameters})$. For the coin example, 
-$$p(\text{coin flips}|\theta) = \textrm{Bin}(N_1 | N, \theta) = {N \choose N_1} \theta^{N_1} (1-\theta)^{N-N_1} \quad \text{where $N = N_0 + N_1 =$ number of flips}$$
+$$p(\text{coin flips}|\theta) = \textrm{Bin}(N_1 | N, \theta) = {\binom{N}{N_1}} \theta^{N_1} (1-\theta)^{N-N_1} \quad \text{where $N = N_0 + N_1 =$ number of flips}$$
 
 \noindent Note that the last two terms, the "score", is our focus since they are the only terms that depend on $\theta$. The first term normalizes the distribution.
 
@@ -38,7 +38,7 @@ Inference 1: $p(\theta|x)$ ($x \in N_0, N_1$). How can we estimate $\theta$?
 \subsubsection*{Maximum Likelihood Estimation (MLE)}
 \begin{align*}
 \theta_{MLE} &= \textrm{argmax}_{\theta} \; p(N_0,N_1 | \theta) = \textrm{argmax}_{\theta}  \;\textrm{log}\left[p(N_0,N_1 | \theta)\right] \\
-\theta_{MLE} &= \textrm{argmax}_{\theta} \;\textrm{log}{N \choose N_1} + N_1 \textrm{log} \theta + N_0  \textrm{log} (1-\theta)\quad \text{Because the first term is not a function of $\theta$, we can ignore it.} \\
+\theta_{MLE} &= \textrm{argmax}_{\theta} \;\textrm{log}{\binom{N}{N_1}} + N_1 \textrm{log} \theta + N_0  \textrm{log} (1-\theta)\quad \text{Because the first term is not a function of $\theta$, we can ignore it.} \\
 \frac{d}{d\theta} &= \frac{N_1}{\theta} + \frac{N_0}{1-\theta} \cdot ( -1)  \rightarrow \theta_{MLE} = \frac{N_1}{N_0 + N_1} \\
 \end{align*}
 
@@ -63,7 +63,7 @@ $$\theta_{MAP} = \textrm{argmax}_{\theta} \; p(\theta | \text{x}) = \textrm{argm
 
 \noindent Consider an example:
 \begin{align*}
-p(\theta=0.4|N_0,N_1) &\propto {N \choose N_1} (.4)^{N_1}(1-.4)^{N_0} (0.1) \\
+p(\theta=0.4|N_0,N_1) &\propto {\binom{N}{N_1}} (.4)^{N_1}(1-.4)^{N_0} (0.1) \\
 p(\theta=0.45|N_0,N_1) &= 0 \quad \text{Due to the sparsity of the prior - similar result for $\theta$ = 0.5 and 0.6}
 \end{align*}
 \noindent $\theta_{MAP} = \theta_{MLE}$ when we have a uniform prior since the MLE calculation does not explicitly factor a prior into its calculation.
