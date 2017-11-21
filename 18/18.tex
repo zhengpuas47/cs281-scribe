@@ -10,14 +10,14 @@
 \lecture{18}{November 8}{Sasha Rush} {Jeff Chang, Michael Els, Zhixian Lei, Yuting Sun, Xincheng You, Srivatsan Srinivasan}{Variational Auto-encoders and GANs}%% Add your scribe names!!
 
 Today we are going to go a step forward in Variational Inference. We are going to combine the variational inference and neural networks. 
-\section{Autoencoder}
+\subsection{Autoencoder}
 Suppose we receive a signal $x$ from a source. Then we encode $x$ with encoding function $Enc$
 $$ z = Enc(x) $$
 so that $z$ is simpler than $x$, for example, $z$ can be lower dimension than $x$ or the learned encoding function itself can be a simple function. The goal is to limit the capacity of the model by parameterising $enc$ and $p()$, and to learn them from the data. This leads to the model learning the optimal compression for the data which only saves the most important information and discards the rest. This encoding is often nonlinear in practice, for example, people often use neural networks. Then $z$ might be changed to $z'$ by noise. After that, we want to recover $x$ by inference:
 $$ \hat{x} = \textrm{argmax}_{x'}\Pr(x = x'|z') $$
 This is basically what autoencoder does. For variational autoencoder, we need to parameterize function $Enc$ and $\Pr(x = x'|z')$ usually with neural networks. We might want to learn these functions from data. \\
 \centerline{\includegraphics[width=13cm]{chart.png}}
-\section{Back to Variational Inference}
+\subsection{Back to Variational Inference}
 \begin{eqnarray}
 \log p(x) & = &\log \int_{\theta} p(\theta)p(x | \theta)d\theta \\
 & = & \log \int_{\theta}q(\theta)(p(\theta)/q(\theta))p(x|\theta)d\theta \\
@@ -38,7 +38,7 @@ About the choice of $q$-function, we have following several methods:
 \item We can also do structured mean field. Basically we can divide this graph into several simple subgraphs (they can overlap each other). Inside each subgraphs we can do belief propagation using for example forward-backward algorithm and outside of the subgraphs we use mean field approximation. This $q$ is closer to the original and has a better bound.
 \item More generally we can use neural networks, where $\lambda$ are neural network parameters and we use $q_\lambda$ to approximate the posterior. 
 \end{itemize}
-\section{Variational Autoencoder}
+\subsection{Variational Autoencoder}
 We have learned many models in this class. The Ising model is an example that is difficult to do inference on. There are also models that we can't use EM on. An example of such a model is illustrated here: \\
 
 \begin{center}
@@ -74,7 +74,7 @@ where the latter term can be approximated via reparameterization
 $$ \nabla_{\lambda} E_q\log p(x | \theta) \sim \frac{1}{N}\sum_{n=1}^N\nabla_{\lambda} \log p(x | f_\lambda(s_n)) $$
 after we obtain optimized parameter $\lambda$ from large amount to data $x$, we will obtain an $q_{\lambda}(x)$ as encoding function for all $x$ and we can use it for future encoding and recovery and even generate new $x$ from encoding and decoding processes. 
 
-\section{Sampling from other distribution}
+\subsection{Sampling from other distribution}
 One typical problem when we want to do optimization is that we don't know how to compute 
 $$ \nabla_{\lambda} E_{q_{\lambda}}[\log p(x | \theta)] $$
 There are basically two ways to treat this problem

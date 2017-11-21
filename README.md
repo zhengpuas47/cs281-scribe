@@ -36,3 +36,5 @@ Lecture 15 - [Mean Field](https://github.com/harvard-ml-courses/cs281-scribe/blo
 Lecture 16 - [Variational Inference](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/16/16.pdf)
 
 Lecture 17 - [Loopy Belief Propagation, Gibbs Sampling, and Variational Inference with Gradients](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/17/17.pdf)
+
+Lecture 18 - [Variational autoencoders and GANs](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/18/18.pdf)
