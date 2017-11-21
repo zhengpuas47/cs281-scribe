@@ -8,7 +8,7 @@
 
 \lecture{7}{September 25}{Sasha Rush}{Juntao Wang, Alexander Wei, Kevin Zhang, Aron Szanto}{Neural Networks}
 
-\subsubsection{Introduction}
+\subsection{Introduction}
 
 Neural networks have been a hot topic recently in machine learning. But everything we will cover today has essentially been known since '70s and '80s. Since then, there has been in increased focus on this subject due to its successes after improved computing power, larger datasets, better neural network architectures, and more careful study in academia. Neural networks have also seen wide adoption in industry in recent years. Lately, there has also been work trying to integrate other methods of inference into neural networks---we will take a look at this topic later in this course.  We cover neural networks now as a tangentially-related introduction to graphical models and as an example of combining traditional inference with deep models.
 
@@ -64,7 +64,7 @@ See iPython notebook for demo.
 Consider the adaptive basis $\sigma(w^\top \sigma(Wx + b') + b)$. We can represent this graphically with a two-layer, fully-connected network:
 
 \begin{center}
-    \includegraphics[width=2in]{7/neural-network.png}
+    \includegraphics[width=2in]{neural-network.png}
 \end{center}
 
 In the literature, the circles are called ``neurons,'' matrices are ``fully connected,'' each column is a ``layer'' with implied squashing, each line is a parameter. The goal of these networks is to find $\mu$.

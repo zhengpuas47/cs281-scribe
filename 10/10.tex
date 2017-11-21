@@ -7,8 +7,9 @@
 
 \lecture{10}{September 11}{Sasha Rush}{Max Hopkins, Sebastian Wagner-Carena, Mien Wang, Jamila Pegues}{Exact Inference: Time Series}
 
-\section{Prelude}
-\subsection{Notation}
+\subsection{Prelude}
+\subsubsection{Notation}
+\label{sec:l10notation}
 Recall from Lecture 9 our notation for the joint probability distributions of \textit{Undirected Graphical Models} (UGMs). In particular, we have
 \[
 p(x_1,\ldots,x_T)=exp\{\sum\limits_c \theta_c(x_c) - A(\theta)\}
@@ -19,7 +20,7 @@ p(x_1,\ldots,x_T) &\propto \prod\limits_c exp(\theta_c(x_c))\\
 &= \prod\limits_c \psi_c(x_c))
 \end{align*}
 This latter notation is used by Murphy. $\psi_c(x_c)$ are the potentials, and they are simply exp$(\theta_c(x_c)$. The score functions $\theta_c$ are then known as the log potentials.
-\subsection{Moralization}
+\subsubsection{Moralization}
 Recall from last lecture the process of conversion between a \textit{Directed Graphical Model} (DGM) and UGM, known as moralization. Here we consider two diagrams:
 \begin{center}
 \includegraphics[scale=.15]{DGM1}
@@ -45,7 +46,7 @@ and
 \[
 P(D|B,C)=\psi_{c_1}(B,C,D)
 \]
-\subsection{Conditional Independence vs. Parametrization}
+\subsubsection{Conditional Independence vs. Parametrization}
 It is important to keep in mind that DGMs only specify conditional independence. The same DGM's could correspond to completely different parametrizations of the random variables. For example, consider Naive Bayes:
 \begin{center}
 \includegraphics[scale=.1]{naive_bayes}
@@ -61,7 +62,7 @@ Now consider a conditional model:
 Here we are only interested in $p(y|x_1,\ldots,x_T)$. Similarly to NB, the parametrizations of this model can take many forms. For instance, one could use logistic or linear regression, most GLM's, Neural Networks, or even convolutional Neural Networks. In fact this is the model on which Alphago functions, where features $x$ are the tile placements on the board, and $y$ is the output move!
 
 The main point here is that we can stick arbitrary parametrizations into graphical models. These diagrams just specify the conditional dependence--not the distributions. Further, as long as we specify the graphical model structure, we will be able to tell how hard inference will be.
-\section{Time Series}
+\subsection{Time Series}
 In this lecture, we only consider an informal definition of a time series. This structure is marked by collecting data over time, and predicting an output for each data input.
 We are going to consider a special case, labeling a time series. Here our we will have $x_{1:T}$ as our input sequence (features), and $y_{1:T}$ as our output labels. We will begin by providing examples of labeling time series:
 \begin{example}[OCR]
@@ -88,7 +89,7 @@ y = \{d,d,d,o,o\}
 \begin{example}[Tracking]
 Here we are tracking the position of some object with presumed Gaussian noise. In this case both our input and output variables are continuous. The inputs are our position vectors, and the output is the predicted correction for noise.
 \begin{center}
-\includegraphics[scale=.1]{Tracking} 
+\includegraphics[scale=.1]{tracking} 
 \end{center}
 \end{example}
 \begin{example}[Education]
@@ -105,8 +106,8 @@ We consider typing on an iphone, where inputs are the continuous position of key
 y = \{s,t,o,p\}
 \end{center}
 \end{example}
-\section{Markov Models}
-\subsection{Hidden Markov Model}
+\subsection{Markov Models}
+\subsubsection{Hidden Markov Model}
 \begin{center}
 \includegraphics[scale=.1]{HMM} 
 \end{center}
@@ -124,9 +125,9 @@ HMMs such as the above are often parametrized in the following manner:
 \begin{center}
 \includegraphics[scale=.1]{HMM_Param} 
 \end{center}
-\subsection{State Space Model}
+\subsubsection{State Space Model}
 While continuous y has the same graphical model, it has completely different usage and was developed completely separately. This model is called the \textit{State Space Model} (SSM). This model is often used when we have a continuous signal disturbed by gaussian noise--this becomes multivariate and we can compute inference nicely. 
-\subsection{Maximum Entropy Markov Model}
+\subsubsection{Maximum Entropy Markov Model}
 Yet another Markov Model is the \textit{Maxent Markov Model} (MEMM). This model assumes we have observed all features, and flips the direction of the conditioning in the vertical direction.
 \begin{center}
 \includegraphics[scale=.1]{MEMM} 
@@ -136,12 +137,12 @@ Thus we are interested in $p(y_1,\ldots,y_T | x_1, \ldots, x_T)$, and $p(y_t|x_t
 MEMM comes with the distinct advantage that we no longer have to assume our features are independent. This is particularly useful in, say, tagging parts of speech where can pick an arbitrary feature basis without worrying about independence. However, the model comes with the downside that there is no closed form, so we must use SGD, i.e. we isolate each $x_i$ and predict $y_i$ with logistic regression.
 
 Picking $p(y_t|x_t,y_{t-1})$ here as an arbitrary neural network is called a Neural Network Markov Model or NN-Markov Model. 
-\section{Conditional Random Field Markov Model}
-While CRF is still a Markov Model, it gets its own section due to its importance. The CRF is simply the UGM of all the above Markov Models:
+\subsection{Conditional Random Field Markov Model}
+While CRF is still a Markov Model, it gets its own subsection due to its importance. The CRF is simply the UGM of all the above Markov Models:
 \begin{center}
 \includegraphics[scale=.1]{CRF} 
 \end{center}
-Recalling Subsection 1.1, we write
+Recalling Subsection ~\ref{sec:l10notation}, we write
 \[
 p(y_{1:T}|x_{1:T} = exp\{\sum\limits_{t}(\theta_t^h(y_t,y_{t-1})+\theta_t^o(y_t,x_t)) - A(\theta) \}
 \]
@@ -166,7 +167,7 @@ Then the clique marginals are given by
 \]
 However this may be computationally intractable, as the $x''$ we sum over is the entire universe! However, this can be computed efficiently for some models such as chain models
 
-\section{Bonus: Lecture by Bertrand Schnieder}
+\subsection{Bonus: Lecture by Bertrand Schnieder}
 
 Bertrand Schnieder gave a snazzy guest lecture on his research, and advertised that the datasets from his research would be ideal as a base for CS 281 final projects.  We take a moment to review his lecture below.
 

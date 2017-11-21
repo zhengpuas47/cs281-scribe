@@ -16,13 +16,13 @@
 \lecture{14}{October 25}{Sasha Rush}{Eric Dunipace, Andrew Fai, Isaac Xia}{Mixture Models}
 
 
-\section{Administrative Announcements}
+\subsection{Administrative Announcements}
 
 Overview:  Second half of class is on Inference, especially on harder problems.  There is only one problem set left, but the bulk of the time will be on the project.
 
 There is some extra time left in the schedule, for which Prof. Rush will poll topics from the class.
 
-\section{Mixture Models: Introduction}
+\subsection{Mixture Models: Introduction}
 
 Up until now, we've been considering mostly supervised learning, where we had an input $x$, an output $y$, and parameters $\theta$.
 
@@ -121,19 +121,20 @@ What does this graphical model look like, and what dependencies do we need to co
 
 All of these Naive Bayes models without observed $y_n$ are used for {\bf different types of clustering}. These models are referred to as {\bf mixture models}, and can handle  multimodality well.  
 
-\section{Types of Mixture Models}
+\subsection{Types of Mixture Models}
 Up until now, most models we've used have unimodal distributions, e.g. normal distributions.
 
 \begin{figure}[H]
-  
+\begin{center}
 \includegraphics[scale=0.5]{multimodal.jpg}
 \includegraphics[scale=0.5]{gaussian.jpg}
 \caption{Multimodality of Multiple Gaussians vs Unimodality of One Gaussian}
+\end{center}
 \end{figure}   
 
 Although we won't limit ourselves to only using continuous mixture models, we'll be primarily working with mixtures of Gaussians.  Below are examples of mixture models we'll see more of.
 
-\subsection{Mixture of Gaussian Modes}
+\subsubsection{Mixture of Gaussian Modes}
 	We can have a mixture of Gaussian models, by simply mixing different Gaussian conditional distributions together:
 
 	\[p(x | y) \sim \mathcal{N}(\mu, \Sigma)  \]
@@ -141,7 +142,7 @@ Although we won't limit ourselves to only using continuous mixture models, we'll
 	An application example is speech recognition, which must deal with different accents (e.g. British vs American) for pronunciations of the same word.  In this case, Gaussian mixture models are able to consolidate the seemingly different pronunciations.
 
 
-\subsection{Mixture of Bernoulli/Multinomial Models}
+\subsubsection{Mixture of Bernoulli/Multinomial Models}
 
 	We can instead mix together various Bernoulli or Multinomial conditionals. 
 
@@ -152,7 +153,7 @@ Although we won't limit ourselves to only using continuous mixture models, we'll
 	% [Commentary on applications?]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\section{Math behind Mixture Models}
+\subsection{Math behind Mixture Models}
 
 Now, we delve more deeply into the math behind using such mixture models.  To start, the models involve $x$ (data), $z$ (latent variables), $\pi$ (prior of latent variable), and $\{\mu_k\}$ (parameters for conditional distribution).  We will use $x$ and $z$ to denote all $n$ observations of the data and latent variables.
 
@@ -200,7 +201,7 @@ This heuristic is summarized below:
 
 The above is called the {\bf Expectation Maximization} (EM) Algorithm, where step 4 computes the actual expectation maximization, and step 5 actually maximizes through the MLE.  $\pi$ will be Categorical and $\mu$ will be the means of the Gaussians themselves here.
 
-\section{Expectation Maximization Algorithm}
+\subsection{Expectation Maximization Algorithm}
 
 The above algorithm can be generalized, and is known as the {\bf Expectation Maximization} (EM) algorithm.
 
@@ -230,12 +231,12 @@ Alternatively, we could also use the MAP estimate.  The main point is that the p
 
 A similar update happens for $\mu$, but will be specific to the actual form of the model $p(x | \mu)$.
 
-\subsection{Assumptions on EM}
+\subsubsection{Assumptions on EM}
 
 One key point is that the model yields an easily computable $p(z | x, \pi, \mu)$.  If we imagine that $p(x|z)$ is an arbitrary neural net with continuous output, this could be very difficult.  A specific example is a Variational Autoencoder (VAE), which could be found from Kingsma and Welling.
 
 
-\section{Demo on EM}
+\subsection{Demo on EM}
 
 We did a demonstration on Expectation Maximization.
 
@@ -246,7 +247,7 @@ In general, we saw it was pretty hard to even infer the clusters of data especia
 {\bf Q:} \emph{Difference between $k$-means and EM here?}  $k$-means will choose $q$ as the highest probability, instead of assigning a distribution to $q_{nk}$ as EM does.
 
 
-\section{Theory behind Expectation Maximization}
+\subsection{Theory behind Expectation Maximization}
 
 We'll discuss why the EM algorithm works; specifically, why $q_{nk}$ eventually converges to  $p(z_n | x_n, \pi, \mu)$.
 
