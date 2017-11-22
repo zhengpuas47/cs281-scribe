@@ -16,16 +16,16 @@
 \definecolor{comments}{RGB}{0,0,113}
 \definecolor{red}{RGB}{160,0,0}
 \definecolor{green}{RGB}{0,150,0}
- 
-\lstset{language=Python, 
-        basicstyle=\ttfamily\small, 
+
+\lstset{language=Python,
+        basicstyle=\ttfamily\small,
         keywordstyle=\color{keywords},
         commentstyle=\color{comments},
         stringstyle=\color{red},
         showstringspaces=false,
         identifierstyle=\color{green},
         procnamekeys={def,class}}
- 
+
 % \linenumbers
 
 \usetikzlibrary{shapes.geometric}
@@ -245,7 +245,13 @@
     \SOUL@%
 }
 \newcommand{\censorm}[1]{
-    \hbox{{\small \textcolor{red}{\SunshineOpenCircled}}} \hspace*{5cm} 
+    \hbox{{\small \textcolor{red}{\SunshineOpenCircled}}} \hspace*{5cm}
 }
 
 }
+
+
+\newcommand{\pr}[1]{\left(#1\right)}
+\newcommand{\bk}[1]{\left[#1\right]}
+
+
