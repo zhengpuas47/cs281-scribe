@@ -12,16 +12,12 @@
 % \subsection{Loopy BP}
 \subsection{History} 
 We started with Monte Carlo in the past few lectures. The main method is to use draw samples from a proposal distribution and take sample average to approximate expectations.
-
-
-
 \begin{align*}
     \E_{y \sim p(y|x)}[f(y)] & = \int p(y|x) f(y) dy \\
     & \approx \frac{1}{N} \sum_{n=1}^{N} f(\tilde{y}^{(n)})
 \end{align*}
-where $\tilde{y}^{(n)} \sim p(y|x)$
 
-This approach requires the ability to sample $y \sim p(y|x)$.
+where $\tilde{y}^{(n)} \sim p(y|x)$. This approach requires the ability to sample $y \sim p(y|x)$.
 
 \subsection{Univariate Case}
 Let's start at the beginning:  We know $F(x) = p(y \leq x)$ and it is univariate. 
@@ -41,9 +37,11 @@ Let's start at the beginning:  We know $F(x) = p(y \leq x)$ and it is univariate
 
 Assume we can compute $F^{-1}(u)$, then 
 $$ p(F^{u}\leq x) = p(u\leq F(x)) = F(x) u$$
-where $F$ is the CDF of $u \sim \text{Unif}(0,1)$. However, this works only for univariate case. What this means is that, is we wish to sample $y \sim F$ for some known CDF $F$, we need only to sample $U\sim \text{Unif}$ and transform the sample of uniform random variables through $F^{-1}$ to get a sample of $y$. Formally, \[
-U \sim \text{Unif} \implies F^{-1}(U) \sim F \tag{This is known as the probability integral transform}
+where $F$ is the CDF of $u \sim \text{Unif}(0,1)$. However, this works only for univariate case. What this means is that, is we wish to sample $y \sim F$ for some known CDF $F$, we need only to sample $U\sim \text{Unif}$ and transform the sample of uniform random variables through $F^{-1}$ to get a sample of $y$. Formally, 
+\[
+U \sim \text{Unif} \implies F^{-1}(U) \sim F 
 \]
+(This is known as the probability integral transform).
 
 \subsection{Normal Samples}
 We pursue the same strategy as in the univariate case. Given Uniform samples, we wish to apply some transform to obtain a sample of multivariate random variables of some distribution we are interested in. We execute this strategy for Normal random variables (this is known as the Box-Muller transformation). The upshot here is that to sample Normal random variables, we need only to sample Uniform random variables, which is much easier to do.
@@ -132,10 +130,14 @@ p(x \leq x_0 |x \text{is accepted})
 We want to approximate the expectation \[\E_{x\sim p}(f(x)) = \int f(x) p(x)\,dx.\]
 So far, we can sample a bunch of points---via, say, rejection sampling---from $p$ and calculate a sample mean to approximate the true expectation. If the structure of $p$ and the structure of $f$ are very different, so Monte Carlo methods so far might be inefficient, since it samples from high density areas in $p$, which may have very low values of $f$, and the Monte Carlo may miss areas with high values of $f$ but low probability of happening. 
 
+\medskip
+
 Consider the integral \[
 \int q(x) \frac{p(x)}{q(x)}f(x)\,dx = \E_q\pr{f(x)\frac{p(x)}{q(x)}} = \E_{p}(f(x)).
 \]
 We may now apply the same Monte Carlo trick to sample from $q$ and take the sample mean of $f(x) p(x)/q(x)$.
+
+\medskip
 
 What is the benefit of using $q$? Since we can choose $q$ to be closer to $f$, then more of the sample we choose would be around high values of $f$. Here we don't need to wait for some low-probability tail event in $p$ to happen in order to get reliable estimates of $E_p(f(x)).$ Instead, we can directly look at the tail events via $q$ and weight the data appropriately using $p/q$ to still maintain asymptotic convergence.
 
@@ -150,8 +152,6 @@ q^* = \frac{|f(x)|p(x)}{
 }.
 \]
 It may be difficult to normalize $q^*$ in practice, however. 
-
-
 \begin{align*}
     \E_{p}[f(x)] & = \int p(x) f(x) dx \\
     & \approx \frac{1}{N} \sum_{n=1}^{N} f(\tilde{x}^{(n)} 

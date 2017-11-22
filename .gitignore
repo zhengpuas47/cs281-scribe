@@ -219,4 +219,4 @@ TSWLatexianTemp*
 # expex forward references with \gathertags
 *-tags.tex
 
-.DS_Store # Mac DS_store file
+**/.DS_Store # Mac DS_store file
