@@ -10,3 +10,6 @@ So that we don't have to go back and correct your scribe notes for style, follow
 
 #### Images
 *All* images should be encased in a `\figure` environment. Include a descriptive caption and a label. Refer to them from the text using the label. Center the image.
+
+#### Exercises
+Use the `\begin{exercise} ... \end{exercise}`. Use `\begin{proof} ... \end{proof}` for the solution.
