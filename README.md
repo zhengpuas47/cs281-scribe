@@ -38,3 +38,5 @@ Lecture 16 - [Variational Inference](https://github.com/harvard-ml-courses/cs281
 Lecture 17 - [Loopy Belief Propagation, Gibbs Sampling, and Variational Inference with Gradients](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/17/17.pdf)
 
 Lecture 18 - [Variational autoencoders and GANs](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/18/18.pdf)
+
+Lecture 21 - [Deep Learning in Health Care](https://github.com/harvard-ml-courses/cs281-scribe/blob/master/21/21.pdf)
