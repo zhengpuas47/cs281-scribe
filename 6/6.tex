@@ -201,4 +201,52 @@ $$p(y \mid x) = \sigma(w^Tx + b)^y(1 - \sigma(w^Tx + b))^{1-y}$$
 $\mu_c = \text{softmax}(w_c^T x + b_c)_c$
 
 $\theta_c = \log \mu_c$
+
+
+\paragraph{Example 4} Exponential family - Gaussian and Multivariate Gaussian distribution
+
+For PDF of univariate Gaussian:
+\begin{align*}
+p(x) 	&= \frac{1}{\sqrt{2\pi \sigma^2}} e^{-(x-\mu)^2 / (2\sigma^2)} \\
+	&= \frac{1}{\sqrt{2\pi}} \exp \left( -\log\sigma -\frac{x^2}{2\sigma^2} + \frac{\mu x}{2\sigma^2} - \frac{\mu^2}{2\sigma^2}  \right) \\
+	&= \frac{1}{\sqrt{2\pi}} \exp \left( \theta^T \phi(x) -\log\sigma - \frac{\mu^2}{2\sigma^2}  \right)
+\end{align*}
+where:
+\begin{align*}
+	\phi(x) &= \begin{pmatrix}x \\ x^2 \end{pmatrix} \\
+	\theta &= \begin{pmatrix}\mu/\sigma^2 \\ -1/\sigma^2 \end{pmatrix} \\
+	A(\theta) &= \log\sigma + \frac{\mu^2}{2\sigma^2} \\
+		&= -\frac{\theta_1^2}{4\theta_2} - \frac{1}{2} \log(-2\theta_2)  \\
+	h(x) &= \frac{1}{\sqrt{2\pi}}
+\end{align*}
+For PDF of multivariate Gaussian:
+\begin{align*}
+	p(x) = \frac{1}{(2\pi)^{D/2} |\Sigma|^{1/2}} e^{ -\frac{1}{2} (\mathbf{x}-\mu)^T \Sigma^{-1}(\mathbf{x}-\mu)}
+\end{align*}
+where:
+\begin{align*}
+	\phi(\mathbf{x}) &=  \begin{pmatrix}\mathbf{x} \\ \mathbf{x}\mathbf{x}^T \end{pmatrix} \\
+	\theta &=  \begin{pmatrix}\Sigma^{-1}\mu \\  -\frac{1}{2}\Sigma^{-1} \end{pmatrix} \\
+	A(\theta) &= \frac{1}{2}\log(|\Sigma|) + \frac{1}{2} \mu^T \Sigma^{-1} \mu\\
+			&= \frac{1}{2} \log(|-2\theta_2|) +  \frac{1}{4}\theta_1^T \theta_2^{-1} \theta_1\\
+	h(x) &= (2\pi)^{-D/2}
+\end{align*}
+
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
