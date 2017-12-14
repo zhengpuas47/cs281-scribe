@@ -228,7 +228,7 @@ where:
 	\phi(\mathbf{x}) &=  \begin{pmatrix}\mathbf{x} \\ \mathbf{x}\mathbf{x}^T \end{pmatrix} \\
 	\theta &=  \begin{pmatrix}\Sigma^{-1}\mu \\  -\frac{1}{2}\Sigma^{-1} \end{pmatrix} \\
 	A(\theta) &= \frac{1}{2}\log(|\Sigma|) + \frac{1}{2} \mu^T \Sigma^{-1} \mu\\
-			&= \frac{1}{2} \log(|-2\theta_2|) +  \frac{1}{4}\theta_1^T \theta_2^{-1} \theta_1\\
+			&= -\frac{1}{2} \log(|-2\theta_2|) -  \frac{1}{4}\theta_1^T \theta_2^{-1} \theta_1\\
 	h(x) &= (2\pi)^{-D/2}
 \end{align*}
 
